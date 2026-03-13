@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商家体检中心3.0改版 - 作品集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #0a0a0f;
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-bar a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+        .nav-bar a:hover {
+            color: #f5c842;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 24px 60px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #f5c842, #e8951c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .subtitle {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+        .highlight {
+            background: rgba(245, 200, 66, 0.1);
+            border-left: 3px solid #f5c842;
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            color: #ccc;
+        }
+        .tags {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .tag {
+            background: #111118;
+            border: 1px solid rgba(245, 200, 66, 0.3);
+            color: #f5c842;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+        }
+        .section {
+            margin-bottom: 48px;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #f5c842, #e8951c);
+            border-radius: 2px;
+        }
+        .card {
+            background: #111118;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .card p {
+            color: #aaa;
+            margin-bottom: 12px;
+        }
+        .card p:last-child {
+            margin-bottom: 0;
+        }
+        .strategy-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .strategy-item {
+            background: rgba(245, 200, 66, 0.05);
+            border: 1px solid rgba(245, 200, 66, 0.15);
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .strategy-item .num {
+            font-size: 24px;
+            font-weight: 700;
+            color: #f5c842;
+            margin-bottom: 8px;
+        }
+        .strategy-item .title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .strategy-item .desc {
+            font-size: 13px;
+            color: #888;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .image-grid.single {
+            grid-template-columns: 1fr;
+        }
+        .image-grid.cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .image-grid.cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .image-wrapper {
+            background: #1a1a22;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s;
+        }
+        .image-wrapper:hover img {
+            transform: scale(1.02);
+        }
+        .image-wrapper img.error {
+            display: none;
+        }
+        .image-fallback {
+            width: 100%;
+            height: 200px;
+            background: #2a2a35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 14px;
+        }
+        .image-wrapper.has-error .image-fallback {
+            display: flex;
+        }
+        .image-wrapper.has-error img.error {
+            display: none;
+        }
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 32px 0;
+            margin-top: 48px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-footer a {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            background: #111118;
+            transition: all 0.3s;
+        }
+        .nav-footer a:hover {
+            color: #f5c842;
+            background: rgba(245, 200, 66, 0.1);
+        }
+        .nav-footer a.next {
+            margin-left: auto;
+        }
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            .image-grid.cols-2,
+            .image-grid.cols-3 {
+                grid-template-columns: 1fr;
+            }
+            .nav-footer {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .nav-footer a {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_index.html">← 返回作品集</a>
+    </nav>
+
+    <div class="container">
+        <header class="header">
+            <h1>商家体检中心3.0改版</h1>
+            <p class="subtitle">从违规公示到主动赋能的体验重构</p>
+            <div class="tags">
+                <span class="tag">B端</span>
+                <span class="tag">体验改版</span>
+                <span class="tag">2025</span>
+            </div>
+        </header>
+
+        <section class="section">
+            <h2 class="section-title">项目背景</h2>
+            <div class="card">
+                <p>规则中心作为平台帮扶商家合规经营的核心阵地，随着外部竞争加剧，商家运营思路从"规范约束"转向"与商家共建服务"。现有页面以违规公示为核心，存在信息架构失衡、数据价值失效、情感体验负向等核心痛点。本次将规则中心升级为主动赋能的"体检中心"，为商家提供透明、有用、有温度的规则赋能服务。</p>
+            </div>
+            <div class="highlight">
+                <strong>亮点：</strong>本次升级实践了AICoding在二级页面搭建中的应用，实现设计提效。
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">设计分析</h2>
+            <div class="image-wrapper">
+                <img src="images/portfolio_p4_analysis.png" alt="设计分析" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                <div class="image-fallback">图片加载失败</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">目标策略</h2>
+            <p class="card">四大设计策略：</p>
+            <div class="strategy-list">
+                <div class="strategy-item">
+                    <div class="num">01</div>
+                    <div class="title">信息架构重构</div>
+                    <div class="desc">建立"了解→行动→成长"的正向体验流</div>
+                </div>
+                <div class="strategy-item">
+                    <div class="num">02</div>
+                    <div class="title">数据呈现重构</div>
+                    <div class="desc">构建透明的状态与风险洞察，平台做功显性化</div>
+                </div>
+                <div class="strategy-item">
+                    <div class="num">03</div>
+                    <div class="title">情感体验重构</div>
+                    <div class="desc">营造协作、安全、专业的视觉氛围</div>
+                </div>
+                <div class="strategy-item">
+                    <div class="num">04</div>
+                    <div class="title">链路体验完善</div>
+                    <div class="desc">路径简化，高效支持二级页规范化调整</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">方案概览</h2>
+            <div class="image-grid cols-2">
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p4_ov1.png" alt="方案概览1" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p4_ov2.png" alt="方案概览2" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">策略1：信息架构重构</h2>
+            <div class="image-wrapper">
+                <img src="images/portfolio_p4_s1.png" alt="信息架构重构" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                <div class="image-fallback">图片加载失败</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">策略2：数据呈现重构</h2>
+            <div class="image-grid cols-3">
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p4_s2_a.png" alt="数据呈现1" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p4_s2_b.png" alt="数据呈现2" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_extra_225892518351.png" alt="数据呈现3" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">策略3：情感体验重构</h2>
+            <div class="image-grid cols-3">
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p4_s3_a.png" alt="情感体验1" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p4_s3_b.png" alt="情感体验2" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_extra_225892997352.png" alt="情感体验3" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">策略4：链路体验完善</h2>
+            <div class="image-grid cols-2">
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p4_s4.png" alt="链路体验1" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_extra_225897251943.png" alt="链路体验2" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">经验沉淀</h2>
+            <div class="image-grid cols-2">
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p4_exp1.png" alt="经验沉淀1" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p4_exp2.png" alt="经验沉淀2" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="nav-footer">
+            <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_dudao.html">← 上一个：客服督导工作台</a>
+            <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_lvyue.html" class="next">下一个：履约异常优化 →</a>
+        </footer>
+    </div>
+</body>
+</html>

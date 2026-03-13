@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客服主动服务 · 外卖撒漏售后场景探索 - XY Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-card: #111118;
+            --gold-gradient: linear-gradient(135deg, #f5c842, #e8951c);
+            --text-primary: #e8e8f0;
+            --text-secondary: #8888aa;
+            --gold: #f5c842;
+            --gold-dark: #e8951c;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 1000;
+            background: transparent;
+            transition: background 0.3s ease;
+        }
+
+        .nav.scrolled {
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+
+        .nav-back {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-back:hover {
+            color: var(--gold);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 20px 40px;
+        }
+
+        .hero {
+            padding: 40px 0 60px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-tags {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .tag {
+            padding: 4px 12px;
+            background: rgba(245, 200, 66, 0.15);
+            border: 1px solid rgba(245, 200, 66, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--gold);
+        }
+
+        .hero-date {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .overview-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .overview-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 20px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-intro {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .image-container {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1a1a2e;
+            margin-bottom: 20px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .image-container img.error {
+            display: none;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            display: none;
+        }
+
+        .image-container.img-error .image-placeholder {
+            display: block;
+        }
+
+        .strategy-section {
+            margin-bottom: 50px;
+        }
+
+        .strategy-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            padding-left: 16px;
+            border-left: 3px solid var(--gold);
+        }
+
+        .strategy-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .strategy-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gold-gradient);
+            border-radius: 3px 0 0 3px;
+        }
+
+        .strategy-card h4 {
+            font-size: 16px;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .strategy-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .image-grid {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .image-grid.cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .image-grid.cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .image-grid.cols-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .image-grid.cols-5 {
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        .step-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .step-card h4 {
+            font-size: 15px;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .tip-card {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid rgba(245, 200, 66, 0.2);
+        }
+
+        .tip-card h5 {
+            font-size: 13px;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .tip-card p {
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 0;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-nav a:hover {
+            color: var(--gold);
+        }
+
+        .footer-nav a.next {
+            margin-left: auto;
+        }
+
+        @media (max-width: 768px) {
+            .overview-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .image-grid.cols-2,
+            .image-grid.cols-3,
+            .image-grid.cols-4,
+            .image-grid.cols-5 {
+                grid-template-columns: 1fr;
+            }
+
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav" id="nav">
+        <div class="nav-logo">XY</div>
+        <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_index.html" class="nav-back">← 返回作品集</a>
+    </nav>
+
+    <div class="container">
+        <header class="hero">
+            <h1>客服主动服务 · 外卖撒漏售后场景探索</h1>
+            <div class="hero-tags">
+                <span class="tag">C端</span>
+                <span class="tag">创新探索</span>
+            </div>
+            <p class="hero-date">2025年5月</p>
+        </header>
+
+        <section class="overview-card">
+            <div class="overview-stats">
+                <div class="stat-item">
+                    <div class="stat-value">主动服务</div>
+                    <div class="stat-label">创新模式</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">餐品撒漏退款</div>
+                    <div class="stat-label">核心场景</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">标准化路径</div>
+                    <div class="stat-label">迁移价值</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">一、项目背景</h2>
+            <p class="section-intro">
+                在日常用户咨询客服场景中，传统客服被动响应模式难以及时捕捉预警信号，导致问题处理滞后，既影响解决效率，也容易造成用户情绪与事态升级。<br><br>
+                在一期MVP中，选择外卖中典型的<b>"餐品撒漏退款被商家拒绝"</b>场景作为突破口，搭建客服主动服务框架，通过验证「智能预警→自动化协商→闭环处理」的创新流程，沉淀可迁移至更多场景的标准化解决路径。
+            </p>
+            <div class="image-container">
+                <img src="images/portfolio_p2_cover.gif" 
+                     alt="封面图" loading="lazy" 
+                     onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                <div class="image-placeholder">图片加载失败</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">二、设计分析</h2>
+            <div class="image-container">
+                <img src="images/portfolio_p2_analysis.png" 
+                     alt="设计分析" loading="lazy"
+                     onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                <div class="image-placeholder">图片加载失败</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">三、目标策略</h2>
+            <div class="image-container">
+                <img src="images/portfolio_p2_strategy.png" 
+                     alt="目标策略" loading="lazy"
+                     onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                <div class="image-placeholder">图片加载失败</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">四、方案概览</h2>
+            <p class="section-intro" style="margin-bottom: 20px;">核心页面展示</p>
+            <div class="image-grid cols-2">
+                <div class="image-container">
+                    <img src="images/portfolio_p2_overview1.gif" 
+                         alt="核心页面1" loading="lazy"
+                         onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                    <div class="image-placeholder">图片加载失败</div>
+                </div>
+                <div class="image-container">
+                    <img src="images/portfolio_p2_overview2.gif" 
+                         alt="核心页面2" loading="lazy"
+                         onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                    <div class="image-placeholder">图片加载失败</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">五、设计方案</h2>
+
+            <div class="strategy-section">
+                <h3 class="strategy-title">策略一：建设客服主动触达能力，让问题传达更高效</h3>
+                <div class="image-grid cols-5">
+                    <div class="image-container">
+                        <img src="images/portfolio_p2_s1_a.png" 
+                             alt="设计稿1" loading="lazy"
+                             onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                        <div class="image-placeholder">图片加载失败</div>
+                    </div>
+                    <div class="image-container">
+                        <img src="images/portfolio_p2_s1_b.png" 
+                             alt="设计稿2" loading="lazy"
+                             onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                        <div class="image-placeholder">图片加载失败</div>
+                    </div>
+                    <div class="image-container">
+                        <img src="images/portfolio_p2_s1_c.png" 
+                             alt="设计稿3" loading="lazy"
+                             onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                        <div class="image-placeholder">图片加载失败</div>
+                    </div>
+                    <div class="image-container">
+                        <img src="images/portfolio_extra_225888019450.png" 
+                             alt="设计稿4" loading="lazy"
+                             onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                        <div class="image-placeholder">图片加载失败</div>
+                    </div>
+                    <div class="image-container">
+                        <img src="images/portfolio_extra_225889456474.png" 
+                             alt="设计稿5" loading="lazy"
+                             onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                        <div class="image-placeholder">图片加载失败</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strategy-section">
+                <h3 class="strategy-title">策略二：缩短服务路径，让问题极速解决</h3>
+                <div class="image-grid cols-2">
+                    <div class="image-container">
+                        <img src="images/portfolio_p2_s2_a.png" 
+                             alt="方案1" loading="lazy"
+                             onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                        <div class="image-placeholder">图片加载失败</div>
+                    </div>
+                    <div class="image-container">
+                        <img src="images/portfolio_p2_s2_b.png" 
+                             alt="方案2" loading="lazy"
+                             onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                        <div class="image-placeholder">图片加载失败</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strategy-section">
+                <h3 class="strategy-title">策略三：建设视频识别能力，让验证更轻松</h3>
+                <div class="image-grid cols-4">
+                    <div class="image-container">
+                        <img src="images/portfolio_p2_s3_a.gif" 
+                             alt="视频识别1" loading="lazy"
+                             onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                        <div class="image-placeholder">图片加载失败</div>
+                    </div>
+                    <div class="image-container">
+                        <img src="images/portfolio_p2_s3_b.gif" 
+                             alt="视频识别2" loading="lazy"
+                             onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                        <div class="image-placeholder">图片加载失败</div>
+                    </div>
+                    <div class="image-container">
+                        <img src="images/portfolio_extra_225887700376.gif" 
+                             alt="视频识别3" loading="lazy"
+                             onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                        <div class="image-placeholder">图片加载失败</div>
+                    </div>
+                    <div class="image-container">
+                        <img src="images/portfolio_extra_225893448428.gif" 
+                             alt="视频识别4" loading="lazy"
+                             onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                        <div class="image-placeholder">图片加载失败</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">六、数据结果</h2>
+            <div class="image-container">
+                <img src="images/portfolio_p2_result.png" 
+                     alt="数据结果" loading="lazy"
+                     onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                <div class="image-placeholder">图片加载失败</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">七、经验沉淀：AI训练智能客服拟人对话流程</h2>
+
+            <div class="step-card">
+                <h4>步骤1 - 音色训练</h4>
+                <div class="image-container">
+                    <img src="images/portfolio_p2_exp1.png" 
+                         alt="音色训练" loading="lazy"
+                         onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                    <div class="image-placeholder">图片加载失败</div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <h4>步骤2 - 对话流程与话术训练</h4>
+                <div class="image-container">
+                    <img src="images/portfolio_p2_exp2.png" 
+                         alt="对话流程与话术训练" loading="lazy"
+                         onerror="this.classList.add('error'); this.parentElement.classList.add('img-error');">
+                    <div class="image-placeholder">图片加载失败</div>
+                </div>
+            </div>
+
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h5>语气词规范</h5>
+                    <p>避免"嗯，"、"诶，"单独开头，建议"嗯好的"、"诶好的好的"</p>
+                </div>
+                <div class="tip-card">
+                    <h5>句尾词优化</h5>
+                    <p>减少"哦"，适当用"哈"、"呢"（每轮最多一个）</p>
+                </div>
+                <div class="tip-card">
+                    <h5>同义词替换</h5>
+                    <p>"好的"可替换"没问题"、"没关系"、"您放心"</p>
+                </div>
+                <div class="tip-card">
+                    <h5>人称使用</h5>
+                    <p>灵活使用"咱们"、"这边"、"您这儿"</p>
+                </div>
+                <div class="tip-card">
+                    <h5>数字表达</h5>
+                    <p>"3-5分钟"改为"3到5分钟"</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer-nav">
+            <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_zhiguanjia.html" class="prev">← 小美智管家优化</a>
+            <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_dudao.html" class="next">客服督导工作台 →</a>
+        </footer>
+    </div>
+
+    <script>
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

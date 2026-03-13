@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能客服·履约异常场景体验优化 - 作品集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #0a0a0f;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+        
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            z-index: 100;
+            border-bottom: 1px solid rgba(245, 200, 66, 0.1);
+        }
+        
+        .nav a {
+            color: #f5c842;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+        
+        .nav a:hover {
+            opacity: 0.8;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 20px 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #f5c842, #e8951c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header .subtitle {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+        
+        .header .tags {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .header .tag {
+            background: #111118;
+            border: 1px solid rgba(245, 200, 66, 0.3);
+            color: #f5c842;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+        
+        .section {
+            margin-bottom: 48px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(245, 200, 66, 0.2);
+        }
+        
+        .card {
+            background: #111118;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .card p {
+            color: #bbb;
+            font-size: 15px;
+        }
+        
+        .card ul {
+            color: #bbb;
+            font-size: 15px;
+            padding-left: 20px;
+        }
+        
+        .card li {
+            margin-bottom: 8px;
+        }
+        
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .strategy-item {
+            background: rgba(245, 200, 66, 0.05);
+            border: 1px solid rgba(245, 200, 66, 0.15);
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .strategy-item h4 {
+            color: #f5c842;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .strategy-item p {
+            color: #999;
+            font-size: 13px;
+        }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .image-grid.single {
+            grid-template-columns: 1fr;
+        }
+        
+        .image-grid.three {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .image-grid.four {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        img {
+            width: 100%;
+            border-radius: 8px;
+            background: #1a1a24;
+            loading: lazy;
+        }
+        
+        img.error {
+            background: #2a2a34;
+            min-height: 200px;
+        }
+        
+        .nav-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid rgba(245, 200, 66, 0.1);
+        }
+        
+        .nav-footer a {
+            color: #f5c842;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-footer a:hover {
+            opacity: 0.8;
+        }
+        
+        .nav-footer .next {
+            margin-left: auto;
+        }
+        
+        @media (max-width: 600px) {
+            .strategy-grid,
+            .image-grid,
+            .image-grid.four {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-grid.three {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_index.html">← 返回作品集</a>
+    </nav>
+    
+    <div class="container">
+        <header class="header">
+            <h1>智能客服·履约异常场景体验优化</h1>
+            <p class="subtitle">聚焦外卖&住宿2大场景，提升智能解决率与满意度</p>
+            <div class="tags">
+                <span class="tag">C端</span>
+                <span class="tag">体验优化</span>
+                <span class="tag">2025年8月</span>
+            </div>
+        </header>
+        
+        <section class="section">
+            <h2 class="section-title">项目背景</h2>
+            <div class="card">
+                <p>外卖与住宿是客服IM进线量最高的两大业务，履约异常问题（外卖无骑手接单、酒店到店无房等）占比近20%的进线场景。通过用户体验旅程分析，发现服务链路中存在多处体验卡点。本期聚焦外卖和住宿业务履约异常场景，通过解决共性体验问题、优化关键节点，提升整体服务体验与智能解决率。</p>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">设计分析</h2>
+            <div class="image-grid">
+                <img src="images/portfolio_p5_ana1.png" alt="设计分析1" onerror="this.classList.add('error')">
+                <img src="images/portfolio_p5_ana2.png" alt="设计分析2" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">目标策略</h2>
+            <div class="strategy-grid">
+                <div class="strategy-item">
+                    <h4>进线咨询阶段</h4>
+                    <p>增加识别/预判，减少用户输入成本</p>
+                </div>
+                <div class="strategy-item">
+                    <h4>问题核实阶段</h4>
+                    <p>过程透明有预期，缓解等待焦虑</p>
+                </div>
+                <div class="strategy-item">
+                    <h4>方案共识阶段</h4>
+                    <p>建立通用规范可视化表达，满足用户核心需求</p>
+                </div>
+                <div class="strategy-item">
+                    <h4>履约闭环阶段</h4>
+                    <p>强化解决动作明确结果，保证服务闭环</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">方案概览</h2>
+            <div class="image-grid four">
+                <img src="images/portfolio_extra_225903329156.png" alt="酒店-智能预判" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225899012116.png" alt="酒店-房间打扫" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225905593060.png" alt="酒店-满房" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225897254023.png" alt="酒店-未收订单" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225893479483.png" alt="无骑手-智能识别" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225897411766.png" alt="无骑手-多方案" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225901887000.gif" alt="无骑手-加急召唤" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">设计方案 - 进线咨询</h2>
+            <div class="image-grid">
+                <img src="images/portfolio_p5_s1_a.png" alt="策略1-1" onerror="this.classList.add('error')">
+                <img src="images/portfolio_p5_s1_b.png" alt="策略1-2" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">设计方案 - 问题核实</h2>
+            <div class="image-grid four">
+                <img src="images/portfolio_p5_s2_a.gif" alt="策略2-1" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225899170980.png" alt="策略2-2" onerror="this.classList.add('error')">
+                <img src="images/portfolio_p5_s2_b.png" alt="策略2-3" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225902689813.png" alt="策略2-4" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">设计方案 - 方案共识</h2>
+            <div class="image-grid four">
+                <img src="images/portfolio_p5_s3_a.png" alt="策略3-1" onerror="this.classList.add('error')">
+                <img src="images/portfolio_p5_s3_b.png" alt="策略3-2" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225903801380.png" alt="策略3-3" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225898213736.gif" alt="策略3-4" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">设计方案 - 履约闭环</h2>
+            <div class="image-grid three">
+                <img src="images/portfolio_p5_s4.png" alt="策略4-1" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225899968452.gif" alt="策略4-2" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225900289150.png" alt="策略4-3" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">经验沉淀</h2>
+            <div class="image-grid three">
+                <img src="images/portfolio_p5_exp1.png" alt="经验沉淀1" onerror="this.classList.add('error')">
+                <img src="images/portfolio_p5_exp2.png" alt="经验沉淀2" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225903482461.png" alt="经验沉淀3" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">数据结果</h2>
+            <div class="image-grid single">
+                <img src="images/portfolio_p5_result.png" alt="数据结果" onerror="this.classList.add('error')">
+            </div>
+        </section>
+    </div>
+    
+    <footer class="nav-footer">
+        <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_tijian.html">← 商家体检中心</a>
+        <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_qishou.html" class="next">骑手客服工作台简化 →</a>
+    </footer>
+</body>
+</html>

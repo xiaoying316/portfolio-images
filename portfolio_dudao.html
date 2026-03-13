@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客服督导工作台搭建 - 作品集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #0a0a0f;
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-bar a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+        .nav-bar a:hover {
+            color: #f5c842;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 24px 60px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #f5c842, #e8951c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .subtitle {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+        .tags {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .tag {
+            background: #111118;
+            border: 1px solid rgba(245, 200, 66, 0.3);
+            color: #f5c842;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+        }
+        .section {
+            margin-bottom: 48px;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #f5c842, #e8951c);
+            border-radius: 2px;
+        }
+        .card {
+            background: #111118;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .card p {
+            color: #aaa;
+            margin-bottom: 12px;
+        }
+        .card p:last-child {
+            margin-bottom: 0;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .metric-item {
+            background: rgba(245, 200, 66, 0.1);
+            border: 1px solid rgba(245, 200, 66, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        .metric-item .label {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        .metric-item .value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f5c842;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .image-grid.single {
+            grid-template-columns: 1fr;
+        }
+        .image-grid.cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .image-grid.cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .image-grid.cols-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        .image-grid.cols-5 {
+            grid-template-columns: repeat(5, 1fr);
+        }
+        .image-wrapper {
+            background: #1a1a22;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s;
+        }
+        .image-wrapper:hover img {
+            transform: scale(1.02);
+        }
+        .image-wrapper img.error {
+            display: none;
+        }
+        .image-fallback {
+            width: 100%;
+            height: 200px;
+            background: #2a2a35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 14px;
+        }
+        .image-wrapper.has-error .image-fallback {
+            display: flex;
+        }
+        .image-wrapper.has-error img.error {
+            display: none;
+        }
+        .video-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(245, 200, 66, 0.1);
+            border: 1px solid rgba(245, 200, 66, 0.3);
+            color: #f5c842;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            margin-top: 16px;
+            transition: all 0.3s;
+        }
+        .video-link:hover {
+            background: rgba(245, 200, 66, 0.2);
+        }
+        .experience-card {
+            background: linear-gradient(135deg, rgba(245, 200, 66, 0.1), rgba(232, 149, 28, 0.05));
+            border: 1px solid rgba(245, 200, 66, 0.2);
+        }
+        .experience-list {
+            list-style: none;
+            padding: 0;
+        }
+        .experience-list li {
+            padding: 8px 0;
+            color: #ccc;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .experience-list li::before {
+            content: '✓';
+            color: #f5c842;
+            font-weight: bold;
+        }
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 32px 0;
+            margin-top: 48px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-footer a {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            background: #111118;
+            transition: all 0.3s;
+        }
+        .nav-footer a:hover {
+            color: #f5c842;
+            background: rgba(245, 200, 66, 0.1);
+        }
+        .nav-footer a.next {
+            margin-left: auto;
+        }
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            .image-grid.cols-2,
+            .image-grid.cols-3,
+            .image-grid.cols-4,
+            .image-grid.cols-5 {
+                grid-template-columns: 1fr;
+            }
+            .nav-footer {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .nav-footer a {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_index.html">← 返回作品集</a>
+    </nav>
+
+    <div class="container">
+        <header class="header">
+            <h1>客服督导工作台搭建</h1>
+            <p class="subtitle">AI主导+人工纠偏的人机协同新范式</p>
+            <div class="tags">
+                <span class="tag">B端</span>
+                <span class="tag">AI创新</span>
+                <span class="tag">2025</span>
+            </div>
+        </header>
+
+        <section class="section">
+            <h2 class="section-title">项目背景</h2>
+            <div class="card">
+                <p>传统客服模式下，1名客服人均仅能同时服务3-4人，处理10万次对话需约1000名客服，效率低、成本高。本项目利用大模型技术，探索以"AI主导解决问题，人工实时监管纠偏"的督导客服模式，辅助提升智能服务的闭环解决能力，达到降低人力成本的目标。</p>
+                <div class="metrics">
+                    <div class="metric-item">
+                        <div class="label">业务目标</div>
+                        <div class="value">提升CPD</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="label">体验目标</div>
+                        <div class="value">高效监管</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="label">设计难点</div>
+                        <div class="value">AI协同</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">设计分析与目标策略</h2>
+            <div class="image-grid cols-3">
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p3_ana1.png" alt="设计分析1" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p3_ana2.png" alt="设计分析2" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p3_ana3.png" alt="设计分析3" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">方案概览</h2>
+            <a class="video-link" href="images/portfolio_extra_225905740234.png" target="_blank">
+                ▶ 观看演示视频
+            </a>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">设计目标1：提升会话监控效率</h2>
+            <div class="image-grid cols-3">
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p3_t1_a.png" alt="监控1" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p3_t1_b.png" alt="监控2" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p3_t1_c.png" alt="监控3" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_extra_225904122895.png" alt="监控4" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_extra_225897400627.png" alt="监控5" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">设计目标2：提升干预/处理任务的效率</h2>
+            <div class="image-grid cols-3">
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p3_t2_a.png" alt="干预1" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_p3_t2_b.png" alt="干预2" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/portfolio_extra_225893789492.png" alt="干预3" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                    <div class="image-fallback">图片加载失败</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">经验沉淀</h2>
+            <div class="card experience-card">
+                <p style="color: #f5c842; margin-bottom: 16px;">AI角色Prompt设计要点</p>
+                <ul class="experience-list">
+                    <li>明确角色人设：姓名、年龄、职业特征</li>
+                    <li>使用自然短句，每次回复不超过100字</li>
+                    <li>严禁Markdown格式，模拟真人打字节奏</li>
+                    <li>禁止机器化术语，转化为自然语言</li>
+                    <li>多样化回复，避免千篇一律</li>
+                </ul>
+            </div>
+            <div class="image-wrapper" style="margin-top: 20px;">
+                <img src="images/portfolio_p3_exp.png" alt="经验沉淀" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                <div class="image-fallback">图片加载失败</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">项目结果</h2>
+            <div class="image-wrapper">
+                <img src="images/portfolio_p3_result.png" alt="项目结果" loading="lazy" onerror="this.classList.add('error'); this.parentElement.classList.add('has-error');">
+                <div class="image-fallback">图片加载失败</div>
+            </div>
+        </section>
+
+        <footer class="nav-footer">
+            <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_saolou.html">← 上一个：外卖撒漏售后</a>
+            <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_tijian.html" class="next">下一个：商家体检中心 →</a>
+        </footer>
+    </div>
+</body>
+</html>

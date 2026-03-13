@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能客服流程探索·优选退赔场景 - 作品集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #0a0a0f;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+        
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            z-index: 100;
+            border-bottom: 1px solid rgba(245, 200, 66, 0.1);
+        }
+        
+        .nav a {
+            color: #f5c842;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+        
+        .nav a:hover {
+            opacity: 0.8;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 20px 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #f5c842, #e8951c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header .subtitle {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+        
+        .header .tags {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .header .tag {
+            background: #111118;
+            border: 1px solid rgba(245, 200, 66, 0.3);
+            color: #f5c842;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+        
+        .section {
+            margin-bottom: 48px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(245, 200, 66, 0.2);
+        }
+        
+        .card {
+            background: #111118;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .card p {
+            color: #bbb;
+            font-size: 15px;
+        }
+        
+        .card ul {
+            color: #bbb;
+            font-size: 15px;
+            padding-left: 20px;
+        }
+        
+        .card li {
+            margin-bottom: 8px;
+        }
+        
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .value-item {
+            background: rgba(245, 200, 66, 0.05);
+            border: 1px solid rgba(245, 200, 66, 0.15);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .value-item h4 {
+            color: #f5c842;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .value-item p {
+            color: #999;
+            font-size: 13px;
+        }
+        
+        .problem-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        
+        .problem-table th,
+        .problem-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 14px;
+        }
+        
+        .problem-table th {
+            color: #f5c842;
+            font-weight: 500;
+        }
+        
+        .problem-table td {
+            color: #bbb;
+        }
+        
+        .problem-table .count {
+            color: #f5c842;
+            font-weight: 600;
+        }
+        
+        .timeline {
+            margin-top: 16px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 16px;
+            padding: 12px 0;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 55px;
+            top: 36px;
+            bottom: -12px;
+            width: 2px;
+            background: rgba(245, 200, 66, 0.2);
+        }
+        
+        .timeline-item:last-child::before {
+            display: none;
+        }
+        
+        .timeline-date {
+            width: 70px;
+            font-size: 13px;
+            color: #f5c842;
+            flex-shrink: 0;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            background: #111118;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #bbb;
+        }
+        
+        .timeline-content.done::before {
+            content: '✅ ';
+        }
+        
+        .timeline-content.doing::before {
+            content: '🔄 ';
+        }
+        
+        .timeline-content.pending::before {
+            content: '⏳ ';
+        }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .image-grid.single {
+            grid-template-columns: 1fr;
+        }
+        
+        img {
+            width: 100%;
+            border-radius: 8px;
+            background: #1a1a24;
+            loading: lazy;
+        }
+        
+        img.error {
+            background: #2a2a34;
+            min-height: 200px;
+        }
+        
+        .nav-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid rgba(245, 200, 66, 0.1);
+        }
+        
+        .nav-footer a {
+            color: #f5c842;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-footer a:hover {
+            opacity: 0.8;
+        }
+        
+        .nav-footer .next {
+            margin-left: auto;
+        }
+        
+        @media (max-width: 600px) {
+            .value-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .timeline-item::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_index.html">← 返回作品集</a>
+    </nav>
+    
+    <div class="container">
+        <header class="header">
+            <h1>智能客服流程探索·优选退赔场景</h1>
+            <p class="subtitle">从55个业务筛选，系统性重构智能退赔服务流程</p>
+            <div class="tags">
+                <span class="tag">C端</span>
+                <span class="tag">流程优化</span>
+                <span class="tag">2024-2025</span>
+            </div>
+        </header>
+        
+        <section class="section">
+            <h2 class="section-title">项目背景</h2>
+            <div class="card">
+                <p>智能客服用户感受"不够智能"，与竞品也有一定差距，且智能客服问题解决率是服体IM核心目标。从55个业务中筛选出优选退赔场景作为突破口，分析156条真实case，归纳5类核心问题，制定系统性解决方案。</p>
+            </div>
+            <div class="value-grid">
+                <div class="value-item">
+                    <h4>对用户</h4>
+                    <p>让用户更简单、高效地解决问题</p>
+                </div>
+                <div class="value-item">
+                    <h4>对业务</h4>
+                    <p>可供各业务复用且快速上线</p>
+                </div>
+                <div class="value-item">
+                    <h4>对设计师</h4>
+                    <p>同场景复用通用服务流程，节约资源</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">分析图</h2>
+            <div class="image-grid single">
+                <img src="images/portfolio_p7_status.png" alt="分析图" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">业务筛选过程</h2>
+            <div class="image-grid">
+                <img src="images/portfolio_extra_225898241763.png" alt="总服务量维度" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225903534965.png" alt="问题解决率维度" onerror="this.classList.add('error')">
+            </div>
+            <div class="card" style="margin-top: 16px;">
+                <p><strong>筛选逻辑：</strong></p>
+                <ul>
+                    <li>从55个业务中初筛7个子业务</li>
+                    <li>精筛：保留配合意愿高的业务</li>
+                    <li>终筛：保留可与多业务通用的痛点场景→优选</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">5类核心问题</h2>
+            <div class="card">
+                <table class="problem-table">
+                    <thead>
+                        <tr>
+                            <th>阶段</th>
+                            <th>问题描述</th>
+                            <th>case数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>退赔前</td>
+                            <td>识别/预判不准，用户失去信任</td>
+                            <td class="count">56/156</td>
+                        </tr>
+                        <tr>
+                            <td>退赔前</td>
+                            <td>用户情绪激动未安抚，转人工</td>
+                            <td class="count">21/156</td>
+                        </tr>
+                        <tr>
+                            <td>退赔中</td>
+                            <td>用户不能顺利完成退款</td>
+                            <td class="count">47/156</td>
+                        </tr>
+                        <tr>
+                            <td>退赔后</td>
+                            <td>用户不清楚退赔结果</td>
+                            <td class="count">8/156</td>
+                        </tr>
+                        <tr>
+                            <td>通用</td>
+                            <td>未找到咨询订单</td>
+                            <td class="count">21/156</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">设计方案</h2>
+            
+            <h3 style="color: #f5c842; font-size: 16px; margin-bottom: 12px;">策略1（退赔前）：前置预判用户问题，缩短咨询步骤</h3>
+            <div class="image-grid single" style="margin-bottom: 24px;">
+                <img src="images/portfolio_p7_scene1.jpg" alt="场景1-已取消订单" onerror="this.classList.add('error')">
+            </div>
+            
+            <h3 style="color: #f5c842; font-size: 16px; margin-bottom: 12px;">策略2（退赔前）：用户情绪激动时做好兜底策略</h3>
+            <div class="image-grid single" style="margin-bottom: 24px;">
+                <img src="images/portfolio_p7_scene2.jpg" alt="场景2" onerror="this.classList.add('error')">
+            </div>
+            
+            <h3 style="color: #f5c842; font-size: 16px; margin-bottom: 12px;">策略3（退赔中）：智能侧增加判赔能力，提升自主退赔意愿</h3>
+            <div class="image-grid single" style="margin-bottom: 24px;">
+                <img src="images/portfolio_p7_scene3.jpg" alt="场景3" onerror="this.classList.add('error')">
+            </div>
+            
+            <h3 style="color: #f5c842; font-size: 16px; margin-bottom: 12px;">策略4（退赔后）：优化退赔进度卡片，提升查看效率</h3>
+            <div class="image-grid single" style="margin-bottom: 24px;">
+                <img src="images/portfolio_p7_scene4.jpg" alt="场景4" onerror="this.classList.add('error')">
+            </div>
+            
+            <h3 style="color: #f5c842; font-size: 16px; margin-bottom: 12px;">策略5（通用）：优化订单列表，快速找到咨询订单</h3>
+            <div class="image-grid single">
+                <img src="images/portfolio_p7_scene5.jpg" alt="场景5" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">项目里程碑</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="timeline-date">10月</span>
+                    <div class="timeline-content done">找到典型场景</div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-date">10-11月</span>
+                    <div class="timeline-content done">发现问题</div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-date">11月</span>
+                    <div class="timeline-content done">校验问题</div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-date">11月</span>
+                    <div class="timeline-content done">竞品分析</div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-date">12月</span>
+                    <div class="timeline-content done">制定方案</div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-date">1-3月</span>
+                    <div class="timeline-content doing">推荐试点进行中</div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-date">4-5月</span>
+                    <div class="timeline-content pending">收益评估待开始</div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer class="nav-footer">
+        <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_qishou.html">← 骑手客服工作台</a>
+        <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_index.html" class="next">返回首页 →</a>
+    </footer>
+</body>
+</html>

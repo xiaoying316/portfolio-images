@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>骑手客服工作台简化设计 - 作品集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #0a0a0f;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+        
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            z-index: 100;
+            border-bottom: 1px solid rgba(245, 200, 66, 0.1);
+        }
+        
+        .nav a {
+            color: #f5c842;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+        
+        .nav a:hover {
+            opacity: 0.8;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 20px 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #f5c842, #e8951c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header .subtitle {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+        
+        .header .tags {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .header .tag {
+            background: #111118;
+            border: 1px solid rgba(245, 200, 66, 0.3);
+            color: #f5c842;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+        
+        .section {
+            margin-bottom: 48px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(245, 200, 66, 0.2);
+        }
+        
+        .card {
+            background: #111118;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .card p {
+            color: #bbb;
+            font-size: 15px;
+        }
+        
+        .card ul {
+            color: #bbb;
+            font-size: 15px;
+            padding-left: 20px;
+        }
+        
+        .card li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight-box {
+            background: rgba(245, 200, 66, 0.08);
+            border-left: 3px solid #f5c842;
+            padding: 16px 20px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .highlight-box p {
+            color: #ddd;
+        }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .image-grid.single {
+            grid-template-columns: 1fr;
+        }
+        
+        .image-grid.three {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .image-grid.four {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        img {
+            width: 100%;
+            border-radius: 8px;
+            background: #1a1a24;
+            loading: lazy;
+        }
+        
+        img.error {
+            background: #2a2a34;
+            min-height: 200px;
+        }
+        
+        .nav-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid rgba(245, 200, 66, 0.1);
+        }
+        
+        .nav-footer a {
+            color: #f5c842;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-footer a:hover {
+            opacity: 0.8;
+        }
+        
+        .nav-footer .next {
+            margin-left: auto;
+        }
+        
+        .problem-list {
+            counter-reset: problem;
+            list-style: none;
+            padding: 0;
+        }
+        
+        .problem-list li {
+            counter-increment: problem;
+            padding: 12px 0;
+            padding-left: 36px;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .problem-list li::before {
+            content: counter(problem);
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 24px;
+            height: 24px;
+            background: rgba(245, 200, 66, 0.2);
+            color: #f5c842;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 600px) {
+            .image-grid,
+            .image-grid.four {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-grid.three {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_index.html">← 返回作品集</a>
+    </nav>
+    
+    <div class="container">
+        <header class="header">
+            <h1>骑手客服工作台简化设计</h1>
+            <p class="subtitle">深度调研驱动，服务流程从5步缩短至3步</p>
+            <div class="tags">
+                <span class="tag">B端</span>
+                <span class="tag">效率提升</span>
+                <span class="tag">2024</span>
+            </div>
+        </header>
+        
+        <section class="section">
+            <h2 class="section-title">项目背景</h2>
+            <div class="card">
+                <p>太平洋架构升级是业务2023-2025年最重要的OP，目标是系统满意度达到80%。随着架构升级扩业务，系统接入更多外部信息，工单信息量不断增加，可能影响满意度。从骑手业务着手，通过观察、调研，简化客服工作台，并期望沉淀方法，推广至其他业务。</p>
+                <div class="highlight-box">
+                    <p><strong>设计难点：</strong></p>
+                    <ul>
+                        <li>模糊度高：信息多是长期存在问题，各方尝试均未取得明显效果</li>
+                        <li>不确定性强：业务侧信心不足，设计主动发起调研首次通过客服侧收集精准信息</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">现状分析</h2>
+            <div class="image-grid">
+                <img src="images/portfolio_extra_225905594964.jpg" alt="现状工单量" onerror="this.classList.add('error')">
+                <img src="images/portfolio_p6_status.jpg" alt="现状分析" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">调研方法</h2>
+            <div class="card">
+                <ul>
+                    <li>真实环境观察16个客服工作</li>
+                    <li>追加观察客服操作录屏40+个</li>
+                    <li>归纳30个体验问题，聚焦9个关键痛点</li>
+                </ul>
+            </div>
+            <div class="image-grid single">
+                <img src="images/portfolio_extra_225900292928.jpg" alt="客服操作动线图" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">三大核心问题</h2>
+            <div class="card">
+                <ol class="problem-list">
+                    <li>信息查找动线过长</li>
+                    <li>工作流程先后顺序不符实际</li>
+                    <li>操作效率细节可提升</li>
+                </ol>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">设计策略</h2>
+            <div class="card">
+                <ul>
+                    <li>简化信息，优化流程及操作动线</li>
+                    <li>增加客服自定义高频信息功能</li>
+                    <li>优化体验细节，提升满意度</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">设计方案 - 改前改后对比</h2>
+            <div class="image-grid">
+                <img src="images/portfolio_p6_before.png" alt="改前整体" onerror="this.classList.add('error')">
+                <img src="images/portfolio_p6_after.png" alt="改后整体" onerror="this.classList.add('error')">
+            </div>
+            <div class="image-grid" style="margin-top: 16px;">
+                <img src="images/portfolio_p6_flow_b.png" alt="流程改前-5步" onerror="this.classList.add('error')">
+                <img src="images/portfolio_p6_flow_a.png" alt="流程改后-3步" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">设计方案 - 简化信息</h2>
+            <div class="image-grid three">
+                <img src="images/portfolio_p6_s1_info.jpg" alt="简化信息1" onerror="this.classList.add('error')">
+                <img src="images/portfolio_p6_s1_layout.png" alt="简化信息2" onerror="this.classList.add('error')">
+                <img src="images/portfolio_p6_s1_flow.jpg" alt="流程优化" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">设计方案 - 自定义高频信息</h2>
+            <div class="image-grid three">
+                <img src="images/portfolio_p6_s2_set.png" alt="设置入口" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225899172917.png" alt="设置模式" onerror="this.classList.add('error')">
+                <img src="images/portfolio_p6_s2_done.png" alt="首页展示" onerror="this.classList.add('error')">
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">设计方案 - 体验细节（快捷备注）</h2>
+            <div class="image-grid three">
+                <img src="images/portfolio_p6_s3_before.jpg" alt="Before" onerror="this.classList.add('error')">
+                <img src="images/portfolio_p6_s3_after.jpg" alt="After1" onerror="this.classList.add('error')">
+                <img src="images/portfolio_extra_225904449389.jpg" alt="After2" onerror="this.classList.add('error')">
+            </div>
+        </section>
+    </div>
+    
+    <footer class="nav-footer">
+        <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_lvyue.html">← 履约异常优化</a>
+        <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_youxuan.html" class="next">智能客服流程探索 →</a>
+    </footer>
+</body>
+</html>

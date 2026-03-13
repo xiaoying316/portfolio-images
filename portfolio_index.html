@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>肖莹 - 设计负责人</title>
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-card: #111118;
+            --bg-card-hover: #1a1a25;
+            --gold-start: #f5c842;
+            --gold-end: #e8951c;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b7b;
+            --border-color: rgba(245, 200, 66, 0.2);
+            --gradient-gold: linear-gradient(135deg, var(--gold-start), var(--gold-end));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 导航栏 */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 60px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero区域 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 20px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(245, 200, 66, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(245, 200, 66, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 100px;
+            font-weight: 700;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero .subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 60px;
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 16px 40px;
+            background: var(--gradient-gold);
+            color: var(--bg-primary);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(245, 200, 66, 0.3);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 通用区块样式 */
+        section {
+            padding: 100px 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 60px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--gradient-gold);
+            border-radius: 2px;
+        }
+
+        /* 关于我 */
+        #about {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .about-text {
+            font-size: 18px;
+            color: var(--text-secondary);
+            line-height: 2;
+        }
+
+        .about-text strong {
+            color: var(--gold-start);
+            font-weight: 600;
+        }
+
+        .about-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .about-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px 30px;
+            transition: all 0.3s ease;
+        }
+
+        .about-card:hover {
+            transform: translateX(10px);
+            border-color: var(--gold-start);
+            background: var(--bg-card-hover);
+        }
+
+        .about-card-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .about-card-text {
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+
+        /* 定策略 - 时间轴 */
+        #strategy .timeline {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .timeline-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 35px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-gold);
+        }
+
+        .timeline-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--gold-start);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .timeline-year {
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--gradient-gold);
+            color: var(--bg-primary);
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .timeline-phase {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .timeline-strategy {
+            font-size: 14px;
+            color: var(--gold-start);
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .timeline-points {
+            list-style: none;
+        }
+
+        .timeline-points li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .timeline-points li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--gold-end);
+        }
+
+        /* 建团队 */
+        #team .team-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .team-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 35px;
+            transition: all 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--gold-start);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .team-year {
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--gradient-gold);
+            color: var(--bg-primary);
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .team-phase {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .team-section {
+            margin-bottom: 20px;
+        }
+
+        .team-section-title {
+            font-size: 12px;
+            color: var(--gold-start);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .team-points {
+            list-style: none;
+        }
+
+        .team-points li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 6px 0;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .team-points li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--gold-end);
+        }
+
+        /* 项目案例 */
+        #projects .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 280px;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-gold);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--gold-start);
+            box-shadow: 0 20px 40px rgba(245, 200, 66, 0.15);
+        }
+
+        .project-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .project-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(245, 200, 66, 0.15);
+            color: var(--gold-start);
+            font-size: 12px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+
+        .project-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .project-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            flex-grow: 1;
+        }
+
+        .project-arrow {
+            position: absolute;
+            bottom: 28px;
+            right: 28px;
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-primary);
+            font-size: 18px;
+            opacity: 0;
+            transform: translate(-10px, 10px);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover .project-arrow {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        footer .name {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 1200px) {
+            #projects .projects-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            nav {
+                padding: 15px 30px;
+            }
+            
+            .nav-links {
+                gap: 25px;
+            }
+            
+            section {
+                padding: 80px 30px;
+            }
+            
+            #about {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+            
+            #strategy .timeline,
+            #team .team-cards {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            #projects .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .hero h1 {
+                font-size: 60px;
+            }
+            
+            .hero-stats {
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            nav {
+                padding: 12px 20px;
+            }
+            
+            .logo {
+                font-size: 22px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 42px;
+                letter-spacing: 4px;
+            }
+            
+            .hero .subtitle {
+                font-size: 16px;
+            }
+            
+            .hero-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .stat-number {
+                font-size: 36px;
+            }
+            
+            .cta-button {
+                padding: 14px 30px;
+                font-size: 15px;
+            }
+            
+            section {
+                padding: 60px 20px;
+            }
+            
+            .section-title {
+                font-size: 32px;
+            }
+            
+            #projects .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-card {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav id="navbar">
+        <div class="logo">XY</div>
+        <ul class="nav-links">
+            <li><a href="#about">关于我</a></li>
+            <li><a href="#strategy">设计策略</a></li>
+            <li><a href="#team">团队建设</a></li>
+            <li><a href="#projects">项目案例</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero区域 -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>肖莹</h1>
+            <p class="subtitle">设计负责人 · 7年UX经验 · 带领团队从执行到策略共建</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number" data-target="7">0</div>
+                    <div class="stat-label">年设计经验</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="7">0</div>
+                    <div class="stat-label">人团队管理</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="50">0</div>
+                    <div class="stat-label">AI提效%+</div>
+                </div>
+            </div>
+            <a href="#projects" class="cta-button">查看项目案例</a>
+        </div>
+    </section>
+
+    <!-- 关于我 -->
+    <section id="about">
+        <div class="about-content">
+            <h2 class="section-title">关于我</h2>
+            <div class="about-text">
+                <p>美团设计负责人，7年BC端UX经验，2年+设计管理。带领7人团队支撑客服体验与商家治理双线业务。核心理念：<strong>定策略 · 建团队 · 拿结果</strong>。主导客服体验重构，AI创新落地，推动团队从"需求执行"升级为"策略共建"。</p>
+            </div>
+        </div>
+        <div class="about-cards">
+            <div class="about-card">
+                <div class="about-card-icon">🏆</div>
+                <div class="about-card-text">辅导3名成员晋升</div>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon">📚</div>
+                <div class="about-card-text">团队贡献10篇方法论</div>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon">⚡</div>
+                <div class="about-card-text">AI Coding提效50%+</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 定策略 -->
+    <section id="strategy">
+        <h2 class="section-title">定策略·看变化做选择</h2>
+        <div class="timeline">
+            <div class="timeline-card">
+                <span class="timeline-year">2024</span>
+                <div class="timeline-phase">筑基期</div>
+                <div class="timeline-strategy">稳交付、补短板、建基础</div>
+                <ul class="timeline-points">
+                    <li>建立需求评审机制</li>
+                    <li>完善设计规范文档</li>
+                    <li>规范设计流程SOP</li>
+                </ul>
+            </div>
+            <div class="timeline-card">
+                <span class="timeline-year">2025</span>
+                <div class="timeline-phase">攻坚期</div>
+                <div class="timeline-strategy">提效率、做差异、强AI</div>
+                <ul class="timeline-points">
+                    <li>引入AI辅助设计工具</li>
+                    <li>建立设计组件库</li>
+                    <li>探索智能化解决方案</li>
+                </ul>
+            </div>
+            <div class="timeline-card">
+                <span class="timeline-year">2026</span>
+                <div class="timeline-phase">创新期</div>
+                <div class="timeline-strategy">创范式、融流程、树标杆</div>
+                <ul class="timeline-points">
+                    <li>输出行业方法论</li>
+                    <li>推动业务智能化转型</li>
+                    <li>打造设计团队影响力</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 建团队 -->
+    <section id="team">
+        <h2 class="section-title">建团队·合理用人管理赋能</h2>
+        <div class="team-cards">
+            <div class="team-card">
+                <span class="team-year">2024扎根期</span>
+                <div class="team-phase">保结果、立标准、赋能力</div>
+                <div class="team-section">
+                    <div class="team-section-title">核心策略</div>
+                    <ul class="team-points">
+                        <li>明确团队目标与职责分工</li>
+                        <li>建立设计质量标准</li>
+                    </ul>
+                </div>
+                <div class="team-section">
+                    <div class="team-section-title">关键举措</div>
+                    <ul class="team-points">
+                        <li>每周设计评审机制</li>
+                        <li>建立设计知识库</li>
+                        <li>定期技能培训分享</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="team-card">
+                <span class="team-year">2025共创期</span>
+                <div class="team-phase">扩队伍、转能力、提效率</div>
+                <div class="team-section">
+                    <div class="team-section-title">核心策略</div>
+                    <ul class="team-points">
+                        <li>扩展团队规模与能力</li>
+                        <li>提升团队协作效率</li>
+                    </ul>
+                </div>
+                <div class="team-section">
+                    <div class="team-section-title">关键举措</div>
+                    <ul class="team-points">
+                        <li>引入设计工具链升级</li>
+                        <li>建立跨团队协作机制</li>
+                        <li>推动AI辅助设计落地</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="team-card">
+                <span class="team-year">2026引领期</span>
+                <div class="team-phase">赋自治、创范式、树标杆</div>
+                <div class="team-section">
+                    <div class="team-section-title">核心策略</div>
+                    <ul class="team-points">
+                        <li>培养团队自治能力</li>
+                        <li>输出行业影响力</li>
+                    </ul>
+                </div>
+                <div class="team-section">
+                    <div class="team-section-title">关键举措</div>
+                    <ul class="team-points">
+                        <li>建立团队创新实验室</li>
+                        <li>输出方法论与行业分享</li>
+                        <li>打造标杆案例</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目案例 -->
+    <section id="projects">
+        <h2 class="section-title">拿结果·项目案例</h2>
+        <div class="projects-grid">
+            <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_zhiguanjia.html" class="project-card">
+                <span class="project-tag">B端 · 管理工具</span>
+                <div class="project-title">小美智管家优化</div>
+                <div class="project-desc">面向客服管理者的专属工具，重构系统框架、规划动线，提升管理效率</div>
+                <span class="project-arrow">→</span>
+            </a>
+            <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_saolou.html" class="project-card">
+                <span class="project-tag">C端 · 创新探索</span>
+                <div class="project-title">外卖撒漏售后探索</div>
+                <div class="project-desc">搭建客服主动服务框架，验证「智能预警→自动协商→闭环处理」创新流程</div>
+                <span class="project-arrow">→</span>
+            </a>
+            <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_dudao.html" class="project-card">
+                <span class="project-tag">B端 · AI创新</span>
+                <div class="project-title">客服督导工作台</div>
+                <div class="project-desc">探索AI主导+人工监管纠偏的督导客服模式，提升CPD，降低人力成本</div>
+                <span class="project-arrow">→</span>
+            </a>
+            <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_tijian.html" class="project-card">
+                <span class="project-tag">B端 · 体验改版</span>
+                <div class="project-title">商家体检中心3.0</div>
+                <div class="project-desc">将规则中心升级为主动赋能的体检中心，构建正向引导的商家服务体验</div>
+                <span class="project-arrow">→</span>
+            </a>
+            <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_lvyue.html" class="project-card">
+                <span class="project-tag">C端 · 体验优化</span>
+                <div class="project-title">智能客服-履约异常优化</div>
+                <div class="project-desc">聚焦外卖无骑手接单与酒店无法入住2大场景，提升智能解决率与满意度</div>
+                <span class="project-arrow">→</span>
+            </a>
+            <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_qishou.html" class="project-card">
+                <span class="project-tag">B端 · 效率提升</span>
+                <div class="project-title">骑手客服工作台简化</div>
+                <div class="project-desc">通过深度调研观察，简化工作台信息架构，服务流程从5步缩短至3步</div>
+                <span class="project-arrow">→</span>
+            </a>
+            <a href="https://s3plus.sankuai.com/mzk-emergency-plan/rhino/portfolio_youxuan.html" class="project-card">
+                <span class="project-tag">C端 · 流程优化</span>
+                <div class="project-title">智能客服流程探索-优选退赔</div>
+                <div class="project-desc">从55个业务中筛选优选场景，系统性重构智能客服退赔流程，提升解决率</div>
+                <span class="project-arrow">→</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="name">肖莹 · 设计负责人</div>
+        <p>© 2026</p>
+    </footer>
+
+    <script>
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // 数字滚动动画
+        const animateNumbers = () => {
+            const numbers = document.querySelectorAll('.stat-number');
+            
+            numbers.forEach(num => {
+                const target = parseInt(num.getAttribute('data-target'));
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+                
+                const updateNumber = () => {
+                    current += step;
+                    if (current < target) {
+                        num.textContent = Math.floor(current);
+                        requestAnimationFrame(updateNumber);
+                    } else {
+                        num.textContent = target;
+                    }
+                };
+                
+                updateNumber();
+            });
+        };
+
+        // 使用IntersectionObserver触发数字动画
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateNumbers();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const heroStats = document.querySelector('.hero-stats');
+        if (heroStats) {
+            statsObserver.observe(heroStats);
+        }
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
